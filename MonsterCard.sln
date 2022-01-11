@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonsterCard", "MonsterCard\MonsterCard.csproj", "{3996D7A4-88B1-4B20-B7DE-A2A966FE1E16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonsterTest", "MonsterTest\MonsterTest.csproj", "{EF00BE9C-891B-4752-BEB5-7290E33CD19B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3996D7A4-88B1-4B20-B7DE-A2A966FE1E16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3996D7A4-88B1-4B20-B7DE-A2A966FE1E16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3996D7A4-88B1-4B20-B7DE-A2A966FE1E16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3996D7A4-88B1-4B20-B7DE-A2A966FE1E16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF00BE9C-891B-4752-BEB5-7290E33CD19B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF00BE9C-891B-4752-BEB5-7290E33CD19B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF00BE9C-891B-4752-BEB5-7290E33CD19B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF00BE9C-891B-4752-BEB5-7290E33CD19B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D639831C-2555-40C1-8176-CEDB4E7D26BC}
+	EndGlobalSection
+EndGlobal
