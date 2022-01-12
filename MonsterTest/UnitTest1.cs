@@ -1,6 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MonsterCard;
-using Xunit.Sdk;
 
 namespace MonsterTest
 {
@@ -10,14 +9,14 @@ namespace MonsterTest
         [TestMethod]
         public void CreateBusinessLayer_Success()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
             Assert.IsNotNull(bl);
         }
 
         [TestMethod]
         public void RegisterUser_Success()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
             var result = bl.RegisterUser(new UserLoginData { UserName = "Test1", Password = "Test1" });
 
             Assert.IsTrue(result);
@@ -26,7 +25,7 @@ namespace MonsterTest
         [TestMethod]
         public void RegisterUser_Failed()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
             var result = bl.RegisterUser(new UserLoginData { UserName = "Test1", Password = "Test1" });
             result = bl.RegisterUser(new UserLoginData { UserName = "Test1", Password = "Test1" });
 
@@ -36,14 +35,14 @@ namespace MonsterTest
         [TestMethod]
         public void RegisterUser_Throw_Exeption()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
             Assert.ThrowsException<System.ArgumentNullException>(() => bl.RegisterUser(new UserLoginData { UserName = null, Password = null }));
         }
 
         [TestMethod]
         public void LoginUser_Success()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
             bl.RegisterUser(new UserLoginData { UserName = "Test2", Password = "Test2" });
 
             var token = bl.Login(new UserLoginData { UserName = "Test2", Password = "Test2" });
@@ -53,7 +52,7 @@ namespace MonsterTest
         [TestMethod]
         public void LoginUser_Throw_Exception()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
             bl.RegisterUser(new UserLoginData { UserName = "Test3", Password = "Test3" });
 
             Assert.ThrowsException<System.ArgumentNullException>(() => bl.Login(new UserLoginData { UserName = null, Password = null }));
@@ -62,7 +61,7 @@ namespace MonsterTest
         [TestMethod]
         public void LoginUser_Failed()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
             bl.RegisterUser(new UserLoginData { UserName = "Test4", Password = "Test4" });
 
             var token = bl.Login(new UserLoginData { UserName = "Test0", Password = "Test0" });
@@ -72,7 +71,7 @@ namespace MonsterTest
         [TestMethod]
         public void GenerateToken_Success()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
             var token = bl.GenerateToken("firstname", "lastname");
             Assert.IsNotNull(token);
         }
@@ -80,7 +79,7 @@ namespace MonsterTest
         [TestMethod]
         public void GetUserFromToken_Success()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
             bl.RegisterUser(new UserLoginData { UserName = "name", Password = "password" });
             var token = bl.GenerateToken("name", "password");
             var user = bl.GetUserFromToken(token);
@@ -90,7 +89,7 @@ namespace MonsterTest
         [TestMethod]
         public void GetUserFromToken_Failed()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
             bl.RegisterUser(new UserLoginData { UserName = "name", Password = "password" });
             var token = bl.GenerateToken("name", "password");
             token = token.Substring(0, token.Length - 4);
@@ -103,7 +102,7 @@ namespace MonsterTest
         [TestMethod]
         public void AddPackage_Success()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
             var token = "L055bnNrQUJaVjZ5ZzhjQ1BIWjUxRkJZYmQvWnhTcTVYNGl2UVNnZkxUcz06QWRtaW4=";
 
             Card[] card = { new Card("1", "test1", "10.0"), new Card("4", "test1", "10.0"), new Card("2", "test5", "14.0"), new Card("t", "test5", "8.0"), new Card("5", "test2", "40.0") };
@@ -116,7 +115,7 @@ namespace MonsterTest
         [TestMethod]
         public void AddPackage_Throw_ArgumentNullException()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
             Card[] card = { new Card("1", "test1", "10.0"), new Card("4", "test1", "10.0"), new Card("2", "test5", "14.0"), new Card("t", "test5", "8.0"), new Card("5", "test2", "40.0") };
             var package = new Package(card);
 
@@ -126,7 +125,7 @@ namespace MonsterTest
         [TestMethod]
         public void AddPackage_Throw_UnauthorizedAccessException()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
             Card[] card = { new Card("1", "test1", "10.0"), new Card("4", "test1", "10.0"), new Card("2", "test5", "14.0"), new Card("t", "test5", "8.0"), new Card("5", "test2", "40.0") };
             var package = new Package(card);
 
@@ -140,7 +139,7 @@ namespace MonsterTest
         [TestMethod]
         public void BuyPackage_Success()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
 
             //Add
             var token = "L055bnNrQUJaVjZ5ZzhjQ1BIWjUxRkJZYmQvWnhTcTVYNGl2UVNnZkxUcz06QWRtaW4=";
@@ -160,14 +159,14 @@ namespace MonsterTest
         [TestMethod]
         public void BuyPackage_Throw_ArgumentNullException()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
             Assert.ThrowsException<System.ArgumentNullException>(() => bl.BuyPackage(null));
         }
 
         [TestMethod]
         public void BuyPackage_Throw_UnauthorizedAccessException()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
 
             //Add
             var token = "L055bnNrQUJaVjZ5ZzhjQ1BIWjUxRkJZYmQvWnhTcTVYNGl2UVNnZkxUcz06QWRtaW4=";
@@ -188,7 +187,7 @@ namespace MonsterTest
         [TestMethod]
         public void BuyPackage_Failed_NoCoins()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
 
             //Add
             var token = "L055bnNrQUJaVjZ5ZzhjQ1BIWjUxRkJZYmQvWnhTcTVYNGl2UVNnZkxUcz06QWRtaW4=";
@@ -209,7 +208,7 @@ namespace MonsterTest
         [TestMethod]
         public void GetCards_Success()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
 
             //Add
             var token = "L055bnNrQUJaVjZ5ZzhjQ1BIWjUxRkJZYmQvWnhTcTVYNGl2UVNnZkxUcz06QWRtaW4=";
@@ -230,14 +229,14 @@ namespace MonsterTest
         [TestMethod]
         public void GetCards_Throw_ArgumentNullException()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
             Assert.ThrowsException<System.ArgumentNullException>(() => bl.GetCards(null));
         }
 
         [TestMethod]
         public void GetCards_Throw_UnauthorizedAccessException()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
             bl.RegisterUser(new UserLoginData { UserName = "name", Password = "password" });
             var token = bl.Login(new UserLoginData { UserName = "name", Password = "password" });
             token = token.Substring(0, token.Length - 4);
@@ -249,7 +248,7 @@ namespace MonsterTest
         [TestMethod]
         public void ConfigureDeck_Success()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
 
             //Add Packages
             var token = "L055bnNrQUJaVjZ5ZzhjQ1BIWjUxRkJZYmQvWnhTcTVYNGl2UVNnZkxUcz06QWRtaW4=";
@@ -278,7 +277,7 @@ namespace MonsterTest
         [TestMethod]
         public void ConfigureDeck_Throw_ArgumentNullException()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
             string[] ids = { "22", "4", "1", "5" };
 
             Assert.ThrowsException<System.ArgumentNullException>(() => bl.ConfigureDeck(ids, null));
@@ -287,7 +286,7 @@ namespace MonsterTest
         [TestMethod]
         public void ConfigureDeck_Throw_UnauthorizedAccessException()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
             bl.RegisterUser(new UserLoginData { UserName = "name", Password = "password" });
             var token = bl.Login(new UserLoginData { UserName = "name", Password = "password" });
             token = token.Substring(0, token.Length - 4);
@@ -300,7 +299,7 @@ namespace MonsterTest
         [TestMethod]
         public void ConfigureDeck_Throw_ArgumentException_WrongNumOfCard()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
             bl.RegisterUser(new UserLoginData { UserName = "name", Password = "password" });
             var token = bl.Login(new UserLoginData { UserName = "name", Password = "password" });
             string[] ids = { "22", "4", "1" };
@@ -312,7 +311,7 @@ namespace MonsterTest
         [TestMethod]
         public void GetDecks_Success()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
 
             //Add Packages
             var token = "L055bnNrQUJaVjZ5ZzhjQ1BIWjUxRkJZYmQvWnhTcTVYNGl2UVNnZkxUcz06QWRtaW4=";
@@ -345,7 +344,7 @@ namespace MonsterTest
         [TestMethod]
         public void GetScore_Success()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
             bl.RegisterUser(new UserLoginData { UserName = "name", Password = "password" });
             var token = bl.Login(new UserLoginData { UserName = "name", Password = "password" });
             var user = bl.GetUserFromToken(token);
@@ -359,7 +358,7 @@ namespace MonsterTest
         [TestMethod]
         public void GetScoreBoard_Success()
         {
-            BusinessLayer bl = new BusinessLayer();
+            BusinessLayer bl = new BusinessLayer(new DataAccessLayerMock());
             bl.RegisterUser(new UserLoginData { UserName = "user1", Password = "password1" });
             bl.RegisterUser(new UserLoginData { UserName = "user2", Password = "password2" });
 

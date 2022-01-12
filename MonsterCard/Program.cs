@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace MonsterCard
@@ -307,16 +302,6 @@ namespace MonsterCard
             body.Close();
             reader.Close();
             return data;
-        }
-
-        private static string[] GetParentUriString(Uri uri)
-        {
-            Console.WriteLine("Before: {0}", uri.AbsolutePath);
-            var test2 = uri.AbsolutePath.Split(new string[] { "/" }, StringSplitOptions.None).Skip(1).ToArray();
-            var test = uri.AbsolutePath.Remove(uri.AbsolutePath.Length - uri.Segments[uri.Segments.Length - 1].Length - uri.Query.Length);
-            Console.WriteLine("After: {0}", test);
-            return test2;
-            // return uri.AbsolutePath.Remove(uri.AbsolutePath.Length - uri.Segments[uri.Segments.Length - 1].Length - uri.Query.Length);
         }
 
         public static void Main(string[] args)

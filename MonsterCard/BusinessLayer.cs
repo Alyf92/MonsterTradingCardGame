@@ -1,26 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MonsterCard
 {
     public class BusinessLayer
     {
-        private DataAccessLayer _dataAccessLayer;
+        private IDataAccessLayer _dataAccessLayer;
         private const string _algorithmName = "HmacSHA256";
         private const string _key = "rz8LuOtFBXphj9WQfvFh";
-        private const int _expirationMinutes = 60;
         private Stack<Player> _players = new Stack<Player>();
 
         public BusinessLayer()
         {
             _dataAccessLayer = new DataAccessLayer();
+        }
 
-            //Create Admin User if it doesn't exist
-            RegisterUser(new UserLoginData { UserName = "Admin", Password = "Admin" });
+        public BusinessLayer(IDataAccessLayer dl)
+        {
+            _dataAccessLayer = dl;
         }
 
         #region Registration and Login Functions
@@ -196,17 +193,18 @@ namespace MonsterCard
                 return false;
             }
 
-            var package = _dataAccessLayer.packages.Dequeue();
+            return _dataAccessLayer.BuyPackage(user);
+            /* var package = _dataAccessLayer.packages.Dequeue();
 
-            foreach (var card in package.Cards)
-            {
-                user.Cards.Add(card);
-            }
+             foreach(var card in package.Cards)
+             {
+                 user.Cards.Add(card);
+             }
 
-            user.Coins -= 5;
+             user.Coins -= 5;
 
-            _dataAccessLayer.UpdateUser(user);
-            return true;
+             _dataAccessLayer.UpdateUser(user);
+             return true;*/
         }
 
         public List<Card> GetCards(string token)
@@ -223,7 +221,7 @@ namespace MonsterCard
                 throw new UnauthorizedAccessException();
             }
 
-            return user.Cards;
+            return _dataAccessLayer.GetCards(user);
         }
 
         #endregion
@@ -250,9 +248,11 @@ namespace MonsterCard
 
             Card[] cards = new Card[4];
 
+            var userCards = _dataAccessLayer.GetCards(user);
+
             for (var i = 0; i < ids.Length; i++)
             {
-                var card = user.Cards.Find(card => card.Id == ids[i]);
+                var card = userCards.Find(card => card.Id == ids[i]);
 
                 if (card == null)
                 {
@@ -262,29 +262,7 @@ namespace MonsterCard
                 cards[i] = card;
             }
 
-            //check if deck already exists
-            foreach (var existingDeck in user.Decks)
-            {
-                foreach (var card in cards)
-                {
-                    var foundCard = 0;
-
-                    if (existingDeck.Cards.Contains(card))
-                    {
-                        foundCard++;
-                    }
-
-                    if (foundCard == 4)
-                    {
-                        throw new Exception("Deck already exists");
-                    }
-                }
-
-            }
-
-            user.Decks.Add(new Deck(cards[0], cards[1], cards[2], cards[3]));
-            _dataAccessLayer.UpdateUser(user);
-            return true;
+            return _dataAccessLayer.ConfigureDeck(user, new Deck(cards[0], cards[1], cards[2], cards[3]));
         }
 
         public List<Deck> GetDecks(String token)
@@ -301,7 +279,7 @@ namespace MonsterCard
                 throw new UnauthorizedAccessException();
             }
 
-            return user.Decks;
+            return _dataAccessLayer.GetDecks(user);
         }
         #endregion
 
@@ -357,12 +335,15 @@ namespace MonsterCard
                 throw new UnauthorizedAccessException();
             }
 
-            var deck = user.Decks[deckIndex];
+            var decks = _dataAccessLayer.GetDecks(user);
+            var deck = decks[deckIndex];
 
             if (deck == null)
             {
                 throw new Exception("Deck not found");
             }
+
+            user.Decks = decks;
 
             _players.Push(new Player(user, deckIndex));
 
@@ -499,28 +480,28 @@ namespace MonsterCard
             if (winner == 1)
             {
                 var user2 = player2.User;
-                int indexToRemove = user2.Cards.FindIndex(c => c.Id == card.Id);
-                user2.Cards.RemoveAt(indexToRemove);
+                //int indexToRemove = user2.Cards.FindIndex(c => c.Id == card.Id);
+                //user2.Cards.RemoveAt(indexToRemove);
                 user2.Decks[player2.DeckIndex].Cards.Remove(card);
-                _dataAccessLayer.UpdateUser(user2);
+                // _dataAccessLayer.UpdateUser(user2);
 
                 var user1 = player1.User;
-                user1.Cards.Add(card);
+                //user1.Cards.Add(card);
                 user1.Decks[player1.DeckIndex].Cards.Add(card);
-                _dataAccessLayer.UpdateUser(user2);
+                //_dataAccessLayer.UpdateUser(user2);
             }
             else if (winner == 2)
             {
                 var user1 = player1.User;
-                int indexToRemove = user1.Cards.FindIndex(c => c.Id == card.Id);
-                user1.Cards.RemoveAt(indexToRemove);
+                //int indexToRemove = user1.Cards.FindIndex(c => c.Id == card.Id);
+                //user1.Cards.RemoveAt(indexToRemove);
                 user1.Decks[player1.DeckIndex].Cards.Remove(card);
-                _dataAccessLayer.UpdateUser(user1);
+                //_dataAccessLayer.UpdateUser(user1);
 
                 var user2 = player2.User;
-                user2.Cards.Add(card);
+                //user2.Cards.Add(card);
                 user2.Decks[player2.DeckIndex].Cards.Add(card);
-                _dataAccessLayer.UpdateUser(user2);
+                //_dataAccessLayer.UpdateUser(user2);
             }
         }
 

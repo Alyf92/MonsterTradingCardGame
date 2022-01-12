@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MonsterCard
+﻿namespace MonsterCard
 {
     public enum CardType
     {
@@ -12,7 +6,7 @@ namespace MonsterCard
         Monster
     }
 
-    public enum ElementType 
+    public enum ElementType
     {
         Water,
         Fire,
@@ -21,11 +15,12 @@ namespace MonsterCard
 
     public class Card
     {
-        public string Id { get; private set; }
-        public string Name { get; private set; }
-        public int Damage { get; private set; }
-        public ElementType ElementType { get; private set; }
-        public CardType CardType { get; private set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public int Damage { get; set; }
+        public ElementType ElementType { get; set; }
+        public CardType CardType { get; set; }
+
 
         public Card(string id, string name, string damage)
         {
@@ -33,11 +28,11 @@ namespace MonsterCard
             Name = name;
             String damageWithotDecimalPlaces;
 
-            if(damage.Contains('.'))
+            if (damage.Contains('.'))
             {
                 damageWithotDecimalPlaces = damage.Substring(0, damage.IndexOf('.'));
-            } 
-            else 
+            }
+            else
             {
                 damageWithotDecimalPlaces = damage;
             }
@@ -61,12 +56,10 @@ namespace MonsterCard
             {
                 ElementType = ElementType.Water;
             }
-            else 
+            else
             {
                 ElementType = ElementType.Normal;
             }
         }
-
-
     }
 }
